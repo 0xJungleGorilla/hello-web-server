@@ -11,7 +11,7 @@ fn main() {
 
     let pool = ThreadPool::new(4);
 
-    for stream in listener.incoming() {
+    for stream in listener.incoming().take(5) {
         let stream = stream.unwrap();
         println!("Connection established!");
         pool.execute(|| {
@@ -39,4 +39,5 @@ fn handle_connection(mut stream: TcpStream) {
     let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
 
     stream.write_all(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }
